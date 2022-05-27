@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Menu } from 'antd'
 import { Layout } from 'antd';
+import ajax from '../../../utils/ajax'
 
 const { Sider } = Layout;
-const MenuList = [
+/* const MenuList = [
   {
     id: 1,
     label: '首页',
@@ -101,51 +102,77 @@ const MenuList = [
       }
     ]
   }
-]
+] */
+function isAllow (menuItem) {
+  return menuItem.pagepermisson
+}
+function handlerMenuList (menuList) {
+  let copyMenuList = JSON.parse(JSON.stringify(menuList))
+  let res = []
+  copyMenuList.forEach(item => {
+    if (item.children?.length > 0 && isAllow(item)) {
+      res.push(
+        {
+          id: item.id,
+          label: item.title,
+          grade: item.grade,
+          key: item.key,
+          pagepermisson: item.pagepermisson,
+          children: handlerMenuList(item.children)
+        }
+      )
+    } else {
+      isAllow(item) && res.push(
+        {
+          id: item.id,
+          label: item.title,
+          grade: item.grade,
+          key: item.key,
+          pagepermisson: item.pagepermisson,
+          children: null
+        }
+      )
+    }
+  })
+  return res
+}
 // const rootSubmenuKeys = ['/home', '/user-manage', '/right-manage', '/news-manage', '/examine-manage', '/public-manage'];
 export default function SideMenu (props) {
   const history = useHistory()
+
   // const [openKeys, setOpenKeys] = useState(['/home']);
   let { pathname } = history.location
-  console.log(pathname)
-  const { styleProp, collapsed } = props
-  // const onOpenChange = (keys) => {
-  //   const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-
-  //   if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-  //     setOpenKeys(keys);
-  //   } else {
-  //     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-  //   }
-  // };
+  const { styleProp, collapsed, menuList } = props
+  /*   const onOpenChange = (keys) => {
+      const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+  
+      if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+        setOpenKeys(keys);
+      } else {
+        setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+      }
+    }; */
   return (
     <Sider trigger={null} collapsible collapsed={collapsed} style={{ height: '100vh' }}>
-      <div className={styleProp.logo} />
-      <Menu
-        theme="dark"
-        mode="inline"
-        defaultSelectedKeys={[pathname === '/' ? '/home' : pathname]}
-        defaultOpenKeys={[`/${pathname.split('/')[1]}`]}
-        onClick={(value) => {
-          if (history.location.pathname === value.key) return
-          history.replace(value.key)
-        }}
-        items={MenuList}
-      // onOpenChange={onOpenChange}
-      // openKeys={openKeys}
-      >
-      </Menu>
+      <div style={{ height: '100%', overflow: 'auto' }}>
+        <div className={styleProp.logo}>123</div>
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[pathname]}
+          defaultOpenKeys={[`/${pathname.split('/')[1]}`]}
+          onClick={(value) => {
+            if (history.location.pathname === value.key) return
+            history.replace(value.key)
+
+          }}
+          items={menuList}
+        // onOpenChange={onOpenChange}
+        // openKeys={openKeys}
+        >
+        </Menu>
+      </div>
     </Sider>
 
   )
-}
-
-function getItem (label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
 }
