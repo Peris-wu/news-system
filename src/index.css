@@ -1,0 +1,20 @@
+/*---鼠标点击滚动条显示样式--*/
+::-webkit-scrollbar-thumb:hover{
+   
+  height:50px;
+  -webkit-border-radius:4px;
+}
+
+::-webkit-scrollbar-thumb{
+  /* background-color: #fff; */
+}
+::-webkit-scrollbar-track{
+  background-color: #000;
+}
+
+
+/*---滚动条大小--*/
+::-webkit-scrollbar{
+  width:4px;
+  height:8px;
+}

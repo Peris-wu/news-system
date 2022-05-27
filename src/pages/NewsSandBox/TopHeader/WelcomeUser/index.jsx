@@ -10,12 +10,12 @@ const menu = (
     items={[
       {
         key: 'super-manager',
-        label: '超级管理员',
-        danger: true
+        label: '超级管理员'
       },
       {
         key: 'login-out',
-        label: '退出'
+        label: '退出',
+        danger: true
       }
     ]}
   />
