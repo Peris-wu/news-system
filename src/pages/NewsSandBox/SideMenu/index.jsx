@@ -153,7 +153,7 @@ export default function SideMenu (props) {
       }
     }; */
   return (
-    <Sider trigger={null} collapsible collapsed={collapsed} style={{ height: '100vh' }}>
+    <Sider trigger={null} collapsible collapsed={collapsed}>
       <div style={{ height: '100%', overflow: 'auto' }}>
         <div className={styleProp.logo}>123</div>
         <Menu
