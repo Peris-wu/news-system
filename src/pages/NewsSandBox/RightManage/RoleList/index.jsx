@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Table, Button, Modal, Tree } from 'antd'
-import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { DeleteOutlined, UnorderedListOutlined, WarningOutlined } from '@ant-design/icons'
 import ajax from '../../../../utils/ajax'
 
 /* const treeData = [
@@ -81,14 +81,28 @@ export default function RoleList () {
       key: 'operate',
       render: (item) => {
         return <div>
-          <Button shape='circle' type='primary' icon={<DeleteOutlined />} danger />
+          <Button shape='circle' type='primary' icon={<DeleteOutlined />} danger onClick={() => { delteRole(item) }} />
           <span style={{ padding: '0 5px' }}></span>
           <Button shape='circle' type='primary' icon={<UnorderedListOutlined />} onClick={() => { showModal(item) }} />
         </div>
       }
     }
   ]
-
+  const deleteRoleOk = (item) => {
+    setRoleTableList(roleTableList.filter(r_item => r_item.id !== item.id))
+    ajax.delete(`/api/roles/${item.id}`)
+  }
+  const delteRole = (item) => {
+    Modal.confirm({
+      title: '删除角色权限',
+      content: '确定删除吗',
+      style: { color: 'red' },
+      icon: < WarningOutlined style={{ color: 'red' }} />,
+      onOk: () => { deleteRoleOk(item) },
+      cancelText: '取消',
+      okText: '确定'
+    })
+  }
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
   };
