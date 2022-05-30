@@ -58,7 +58,6 @@ export default function RoleList () {
     })
   }, [])
   const showModal = (item) => {
-    console.log(item);
     setCheckList(item.rights)
     setCurrentId(item.id)
     setIsModalVisible(!isModalVisible)
