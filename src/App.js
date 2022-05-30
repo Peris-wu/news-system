@@ -1,6 +1,6 @@
 import React from 'react'
 import MyRouter from './components/MyRouter'
-import 'antd/dist/antd.css'
+import './App.css'
 
 export default function App() {
   return (
