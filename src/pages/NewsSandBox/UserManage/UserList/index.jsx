@@ -16,6 +16,7 @@ export default function UserList () {
   const updateRef = useRef(null)
   useEffect(() => {
     ajax.get('/api/users?_expand=role').then(res => {
+
       setUserTable(res.data)
     })
   }, [])
@@ -35,6 +36,25 @@ export default function UserList () {
       dataIndex: 'region',
       render: (region) => {
         return <b>{region ? region : '全球'}</b>
+      },
+      filters: [
+        ...regions.map(regionItem => {
+          return {
+            text: regionItem.title,
+            value: regionItem.value
+          }
+        }),
+        {
+          text: '全球',
+          value: '全球'
+        }
+      ],
+      onFilter: (value, record) => {
+        if (value === '全球' && record.region === '') {
+          return true
+        } else {
+          return record.region === value
+        }
       }
     },
     {
@@ -68,9 +88,6 @@ export default function UserList () {
       }
     }
   ]
-  const onCreate = (value) => {
-    console.log(value)
-  }
   const onCancel = () => {
     setAddIsVisible(!addVisible)
   }
