@@ -1,0 +1,18 @@
+.compose-news{
+  .page-header{
+  }
+  .site-page-header {
+    border: 1px solid rgb(235, 237, 240);
+  }
+  :global{
+    .ant-page-header-heading-title{
+      font-size: 28px;      
+    }
+  }
+  .steps-hidden{
+    display: none;
+  }
+  .baseInfo-margin{
+    padding: 50px 0;
+  }
+}

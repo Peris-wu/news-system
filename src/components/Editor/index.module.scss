@@ -1,0 +1,11 @@
+.editor-wrap{
+  .editor{
+    min-height: 200px;
+    border: 1px solid #F1F1F1;
+  }
+  :global{
+    .public-DraftStyleDefault-ltr{
+      // min-height: 200px;
+    }
+  }
+}
