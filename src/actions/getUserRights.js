@@ -1,5 +1,5 @@
 import ajax from '../utils/ajax'
-import { GETUSERRIGHTS } from '../const'
+import { GETUSERRIGHTS, SETUSERRIGHTS } from '../const'
 import handlerStorage from '../utils/handlerLocalStorage'
 export function getUserRights(userInfo) {
   return async dispatch => {
@@ -7,5 +7,11 @@ export function getUserRights(userInfo) {
     dispatch({ type: GETUSERRIGHTS, userInfo: data[0] })
     handlerStorage.setStorage(data[0])
     return data
+  }
+}
+export function setUserRights(userInfo) {
+  return {
+    type: SETUSERRIGHTS,
+    payload: userInfo
   }
 }

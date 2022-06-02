@@ -1,7 +1,9 @@
 import React, { forwardRef, useState } from 'react'
 import { Form, Input, Select } from 'antd'
+import handlerStorage from '../../../../utils/handlerLocalStorage'
 const { Option } = Select
 function CreateForm ({ regions, roles, isDisable, setIsDisable }, ref) {
+  const { role: { roleType }, region } = handlerStorage.getStorage()
   const triggerRequired = (roleId) => {
     if (roleId === 1) {
       setIsDisable(true)
@@ -11,6 +13,29 @@ function CreateForm ({ regions, roles, isDisable, setIsDisable }, ref) {
       return
     }
     setIsDisable(false)
+  }
+
+  const handlerRegionOptionDisabled = (item) => {
+    if (roleType === 1) {
+      return false
+    } else {
+      if (item.value === region) {
+        return false
+      } else {
+        return true
+      }
+    }
+  }
+  const handlerRoleOptionDisabled = (item) => {
+    if (roleType === 1) {
+      return false
+    } else {
+      if (item.roleType < roleType) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
   return (
     <Form
@@ -56,7 +81,7 @@ function CreateForm ({ regions, roles, isDisable, setIsDisable }, ref) {
       >
         <Select disabled={isDisable}>
           {
-            regions.map(item => <Option value={item.value} key={item.id}>{item.value}</Option>)
+            regions.map(item => <Option disabled={handlerRegionOptionDisabled(item)} value={item.value} key={item.id}>{item.value}</Option>)
           }
         </Select>
       </Form.Item>
@@ -77,7 +102,7 @@ function CreateForm ({ regions, roles, isDisable, setIsDisable }, ref) {
           onChange={triggerRequired}
         >
           {
-            roles.map(item => <Option value={item.roleType} key={item.id}>{item.roleName}</Option>)
+            roles.map(item => <Option disabled={handlerRoleOptionDisabled(item)} value={item.roleType} key={item.id}>{item.roleName}</Option>)
           }
         </Select>
       </Form.Item>
