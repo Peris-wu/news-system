@@ -1,8 +1,10 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import handlerStorage from '../../utils/handlerLocalStorage'
+import { useSelector } from 'react-redux'
+import _ from 'lodash'
 export default function Author ({ children }) {
+  const userRightState = useSelector(state => state.userRightReducer)
   return (
-    handlerStorage.getStorage() ? children : <Redirect to="/login" />
+    !_.isEmpty(userRightState) ? children : <Redirect to="/login" />
   )
 }

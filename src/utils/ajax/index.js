@@ -1,5 +1,6 @@
 import axios from 'axios'
 import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 const ajax = axios.create({
   baseURL: 'http://localhost:3000',

@@ -3,6 +3,7 @@ import { Table, Button, Switch, Modal, message } from 'antd'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import CollectCreateForm from '../CreateForm'
 import ajax from '../../../../utils/ajax'
+import handlerStorage from '../../../../utils/handlerLocalStorage'
 const { confirm } = Modal
 export default function UserList () {
   const [userTable, setUserTable] = useState([])
@@ -14,10 +15,20 @@ export default function UserList () {
   const [currentItem, setCurrentItem] = useState({})
   const addRef = useRef(null)
   const updateRef = useRef(null)
+  const { role: { roleType }, region, username } = handlerStorage.getStorage()
   useEffect(() => {
     ajax.get('/api/users?_expand=role').then(res => {
 
-      setUserTable(res.data)
+      setUserTable(roleType === 1 ? res.data : [
+        ...res.data.filter(item => {
+          if (region === item.region && username === item.username) {
+            return item
+          }
+        }),
+        ...res.data.filter(item => {
+          if (region === item.region && roleType < item.role.roleType) return item
+        })
+      ])
     })
   }, [])
   useEffect(() => {
@@ -89,6 +100,9 @@ export default function UserList () {
     }
   ]
   const onCancel = () => {
+    console.log(addRef.current)
+    addRef.current.resetFields()
+    setIsDisable(false)
     setAddIsVisible(!addVisible)
   }
   const showModal = () => {
