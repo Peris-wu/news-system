@@ -27,10 +27,11 @@ export default function NewsSandBoxRoute () {
     "/audit-manage/list": 'ExamineManage/ExamineList',
     "/publish-manage/unpublished": 'PublicManage/UnPublic',
     "/publish-manage/published": 'PublicManage/Publiced',
-    "/publish-manage/sunset": 'PublicManage/Offline'
+    "/publish-manage/sunset": 'PublicManage/Offline',
+    "/news-manage/update/:id": 'NewsManage/NewsUpdate'
   }
   const isBackRouteInfoAllow = item => {
-    return mappingRoute[item.key] && item.pagepermisson
+    return mappingRoute[item.key] && (item.pagepermisson || item.routepermisson)
   }
   const isUserRouteInfoAllow = item => {
     return rights.includes(item.key)

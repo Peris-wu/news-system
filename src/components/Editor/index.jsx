@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Editor } from "react-draft-wysiwyg"
-import { EditorState, convertToRaw } from 'draft-js'
+import { convertToRaw, ContentState, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import editorStyle from './index.module.scss'
-export default function EcloseEditor ({ cb }) {
+export default function EcloseEditor ({ callback, completeContent, exceptContent }) {
   const [editorState, setEditorState] = useState('')
+  useEffect(() => {
+    if (!(completeContent && exceptContent)) return
+    const contentBlock = htmlToDraft(completeContent);
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      const editorState = EditorState.createWithContent(contentState);
+      setEditorState(editorState)
+    }
+    callback(
+      {
+        completeContent,
+        exceptContent
+      }
+    )
+  }, [completeContent])
   const onEditorBlur = () => {
     let editorObj = convertToRaw(editorState.getCurrentContent())
-    cb(
+    callback(
       {
         completeContent: draftToHtml(editorObj),
         exceptContent: editorObj.blocks[0].text.trim()
