@@ -31,6 +31,11 @@ export default function Draft () {
       pathname: `/news-manage/update/${item.id}`
     })
   }
+  const handlerPreview = (item) => {
+    history.push({
+      pathname: `/news-manage/preview/${item.id}`
+    })
+  }
   const columns = [
     {
       title: 'ID',
@@ -40,7 +45,8 @@ export default function Draft () {
     {
       title: '新闻标题',
       dataIndex: 'title',
-      key: 'title'
+      key: 'title',
+      render: (title, item) => <span style={{ color: '#1890FF', cursor: 'pointer' }} onClick={() => { handlerPreview(item) }}>{title}</span>
     },
     {
       title: '作者',

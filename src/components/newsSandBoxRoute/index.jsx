@@ -28,7 +28,8 @@ export default function NewsSandBoxRoute () {
     "/publish-manage/unpublished": 'PublicManage/UnPublic',
     "/publish-manage/published": 'PublicManage/Publiced',
     "/publish-manage/sunset": 'PublicManage/Offline',
-    "/news-manage/update/:id": 'NewsManage/NewsUpdate'
+    "/news-manage/update/:id": 'NewsManage/NewsUpdate',
+    "/news-manage/preview/:id": 'NewsManage/Preview'
   }
   const isBackRouteInfoAllow = item => {
     return mappingRoute[item.key] && (item.pagepermisson || item.routepermisson)
