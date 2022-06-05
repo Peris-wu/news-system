@@ -5,22 +5,22 @@ import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import editorStyle from './index.module.scss'
-export default function EcloseEditor ({ callback, completeContent, exceptContent }) {
+export default function EcloseEditor ({ callback, completeContent }) {
   const [editorState, setEditorState] = useState('')
   useEffect(() => {
-    if (!(completeContent && exceptContent)) return
+    if (!completeContent) return
     const contentBlock = htmlToDraft(completeContent);
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
       const editorState = EditorState.createWithContent(contentState);
       setEditorState(editorState)
+      callback(
+        {
+          completeContent,
+          exceptContent: convertToRaw(editorState.getCurrentContent()).blocks[0].text.trim()
+        }
+      )
     }
-    callback(
-      {
-        completeContent,
-        exceptContent
-      }
-    )
   }, [completeContent])
   const onEditorBlur = () => {
     let editorObj = convertToRaw(editorState.getCurrentContent())

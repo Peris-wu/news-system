@@ -8,7 +8,6 @@ import ajax from '../../utils/ajax'
 import _ from 'lodash'
 const { Step } = Steps
 const { Option } = Select
-// 1-> 撰写新闻 2->更新新闻
 const mapAction = {
   // "0": '撰写新闻',
   // "1": '更新新闻'
@@ -26,7 +25,6 @@ export default function ComposeNews ({ action, newsInfo }) {
   const [composeNews, setComposeNews] = useState({})
   const [sortState, setSortState] = useState([])
   const [initCompleteContent, setInitCompleteContent] = useState('')
-  const [initExceptContent, setInitExceptContent] = useState('')
   const baseInfoRef = useRef()
   const history = useHistory()
   const { id } = useParams()
@@ -37,13 +35,13 @@ export default function ComposeNews ({ action, newsInfo }) {
     })
   }, [])
   useEffect(() => {
+    console.log(newsInfo)
     if (!_.isEmpty(newsInfo)) {
       baseInfoRef.current.setFieldsValue({
         title: newsInfo.title,
         categoryId: newsInfo.categoryId
       })
-      setInitCompleteContent(newsInfo.completeContent)
-      setInitExceptContent(newsInfo.exceptContent)
+      setInitCompleteContent(newsInfo.content)
     }
   }, [newsInfo])
   const stepNext = () => {
@@ -65,7 +63,6 @@ export default function ComposeNews ({ action, newsInfo }) {
     }
   }
   const handlerEditorData = (objFromEditor) => {
-    console.log(123);
     setComposeNews(
       {
         ...composeNews,
@@ -79,7 +76,8 @@ export default function ComposeNews ({ action, newsInfo }) {
   const handlerSave = (state) => {
     if (action === 0) {
       ajax.post(`/api/news`, {
-        ...composeNews,
+        title: composeNews.title,
+        categoryId: composeNews.categoryId,
         content: composeNews.completeContent,
         region: userRightReducer.region ? userRightReducer.region : '全球',
         author: userRightReducer.username,
@@ -92,11 +90,12 @@ export default function ComposeNews ({ action, newsInfo }) {
         publishTime: 0
       })
     } else {
-      console.log(composeNews)
-
-      // ajax.patch(`/api/news/${id}`, {
-
-      // })
+      const { title, categoryId, completeContent } = composeNews
+      ajax.patch(`/api/news/${id}`, {
+        title,
+        categoryId,
+        content: completeContent
+      })
     }
     history.push({
       pathname: state ? '/audit-manage/list' : '/news-manage/draft'
@@ -161,7 +160,7 @@ export default function ComposeNews ({ action, newsInfo }) {
           </Form>
         </div>
         <div className={current === 1 ? '' : composeNewsStyle['steps-hidden']}>
-          <Editor callback={handlerEditorData} completeContent={initCompleteContent} exceptContent={initExceptContent} />
+          <Editor callback={handlerEditorData} completeContent={initCompleteContent} />
         </div>
         <div className={current === 2 ? '' : composeNewsStyle['steps-hidden']}>3</div>
       </div>
