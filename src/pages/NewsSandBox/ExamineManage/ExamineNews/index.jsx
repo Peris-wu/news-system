@@ -7,7 +7,6 @@ export default function ExamineNews () {
   const [auditNews, setAuditNews] = useState([])
   const userRightReducer = useSelector(state => state.userRightReducer)
   const history = useHistory()
-  console.log(userRightReducer)
   useEffect(() => {
     ajax.get(`/api/news?auditState=1&_expand=category`).then(res => {
       let list = res.data
