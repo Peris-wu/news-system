@@ -35,7 +35,6 @@ export default function ComposeNews ({ action, newsInfo }) {
     })
   }, [])
   useEffect(() => {
-    console.log(newsInfo)
     if (!_.isEmpty(newsInfo)) {
       baseInfoRef.current.setFieldsValue({
         title: newsInfo.title,
@@ -94,7 +93,8 @@ export default function ComposeNews ({ action, newsInfo }) {
       ajax.patch(`/api/news/${id}`, {
         title,
         categoryId,
-        content: completeContent
+        content: completeContent,
+        auditState: state
       })
     }
     history.push({

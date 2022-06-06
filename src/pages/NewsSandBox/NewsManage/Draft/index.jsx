@@ -36,6 +36,15 @@ export default function Draft () {
       pathname: `/news-manage/preview/${item.id}`
     })
   }
+  const draftToAudit = (item) => {
+    console.log(item)
+    setDraftState([...draftState.filter(d_item => {
+      return d_item.id !== item.id
+    })])
+    ajax.patch(`/api/news/${item.id}`, {
+      auditState: 1
+    })
+  }
   const columns = [
     {
       title: 'ID',
@@ -67,7 +76,7 @@ export default function Draft () {
           <span style={{ padding: '0 5px' }}></span>
           <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => { toUpdateNews(item) }}></Button>
           <span style={{ padding: '0 5px' }}></span>
-          <Button shape='circle' type="primary" icon={<VerticalAlignTopOutlined />}></Button>
+          <Button shape='circle' type="primary" icon={<VerticalAlignTopOutlined />} onClick={() => { draftToAudit(item) }}></Button>
         </div>
       }
     }
