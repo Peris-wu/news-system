@@ -15,7 +15,6 @@ import style from './index.module.scss'
 const { Content } = Layout;
 
 export default function NewsSandBox () {
-  const [collapsed, setCollapsed] = useState(false);
   const [menuList, setMenuList] = useState([])
   const { role: { rights } } = useSelector(state => state.userRightReducer)
   useEffect(() => {
@@ -52,9 +51,9 @@ export default function NewsSandBox () {
   return (
     <>
       <Layout>
-        <SideMenu styleProp={style} collapsed={collapsed} menuList={menuList} />
+        <SideMenu styleProp={style} menuList={menuList} />
         <Layout className={style['site-layout']}>
-          <TopHeader style={style} collapsed={collapsed} setCollapsed={setCollapsed} />
+          <TopHeader style={style} />
           <Content
             className={style['site-layout-background']}
             style={{
