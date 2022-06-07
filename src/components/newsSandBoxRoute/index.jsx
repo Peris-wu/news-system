@@ -2,10 +2,22 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import lazyLoad from '../../pages/NewsSandBox/LazyLoad'
+import { Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import ajax from '../../utils/ajax'
+
+const antIcon = (
+  <LoadingOutlined
+    style={{
+      fontSize: 24,
+    }}
+    spin
+  />
+)
 export default function NewsSandBoxRoute () {
   const [routeList, setRouteList] = useState([])
   const { role: { rights } } = useSelector(state => state.userRightReducer)
+  const { loading } = useSelector(state => state.loadingReducer)
   useEffect(() => {
     Promise.all([
       ajax.get(`/api/rights`),
@@ -38,15 +50,16 @@ export default function NewsSandBoxRoute () {
     return rights.includes(item.key)
   }
   return (
-    <Switch>
-      {
-        routeList.map(item => {
-          if (isBackRouteInfoAllow(item) && isUserRouteInfoAllow(item)) {
-            return <Route exact key={item.key} path={item.key} render={() => lazyLoad(mappingRoute[item.key])} />
-          }
-        })
-      }
-      {/* <Route path="/home" render={() => lazyLoad('Home')} />
+    <Spin indicator={antIcon} spinning={loading}>
+      <Switch>
+        {
+          routeList.map(item => {
+            if (isBackRouteInfoAllow(item) && isUserRouteInfoAllow(item)) {
+              return <Route exact key={item.key} path={item.key} render={() => lazyLoad(mappingRoute[item.key])} />
+            }
+          })
+        }
+        {/* <Route path="/home" render={() => lazyLoad('Home')} />
     <Route path="/user-manage/list" render={() => lazyLoad('UserManage/UserList')} />
 
     <Route path="/right-manage/role/list" render={() => lazyLoad('RightManage/RoleList')} />
@@ -63,8 +76,9 @@ export default function NewsSandBoxRoute () {
     <Route path="/publish-manage/published" render={() => lazyLoad('PublicManage/Publiced')} />
     <Route path="/publish-manage/sunset" render={() => lazyLoad('PublicManage/Offline')} /> */}
 
-      <Redirect path="/" to="/home" exact />
-      {routeList.length > 0 ? <Route path="*" render={() => lazyLoad('NotFound')} /> : null}
-    </Switch>
+        <Redirect path="/" to="/home" exact />
+        {routeList.length > 0 ? <Route path="*" render={() => lazyLoad('NotFound')} /> : null}
+      </Switch>
+    </Spin>
   )
 }
