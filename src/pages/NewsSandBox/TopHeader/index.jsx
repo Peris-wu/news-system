@@ -25,7 +25,6 @@ export default function TopHeader (props) {
           onClick: () => dispatch(getCollapsed(!collapsed)),
         })}
         <WelcomeUser className={headerStyle['header-right']} />
-        {/* <div className={headerStyle['header-right']}>123</div> */}
       </div>
     </Header>
   )
