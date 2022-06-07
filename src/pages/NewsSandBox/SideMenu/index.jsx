@@ -2,12 +2,14 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Menu } from 'antd'
 import { Layout } from 'antd';
+import { useSelector } from 'react-redux'
 
 const { Sider } = Layout;
 export default function SideMenu (props) {
   const history = useHistory()
+  const { collapsed } = useSelector(state => state.collapsedReducer)
   let { pathname } = history.location
-  const { styleProp, collapsed, menuList } = props
+  const { styleProp, menuList } = props
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div style={{ height: '100%', overflow: 'auto' }}>

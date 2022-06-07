@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 // import { persistReducer } from 'redux-persist'
 // import storage from 'redux-persist/lib/storage'
-import { userRightReducer, loadingReducer } from '../reducers'
+import { userRightReducer, loadingReducer, collapsedReducer } from '../reducers'
 import thunk from 'redux-thunk'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -12,7 +12,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 // const persisteReducer = persistReducer(rootPersistConfig, userRightReducer)
 const reducer = combineReducers({
   userRightReducer,
-  loadingReducer
+  loadingReducer,
+  collapsedReducer
 })
 const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)))
 export default store
