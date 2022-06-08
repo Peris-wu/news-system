@@ -119,10 +119,6 @@ export default function ComposeNews ({ action, newsInfo }) {
           <Form
             ref={baseInfoRef}
             name="baseInfo-form"
-            autoComplete="off"
-            wrapperCol={{
-              flex: 1,
-            }}
           >
             <Form.Item
               label="新闻标题"
@@ -154,7 +150,6 @@ export default function ComposeNews ({ action, newsInfo }) {
                     return <Option key={item.id} value={item.id}>{item.title}</Option>
                   })
                 }
-
               </Select>
             </Form.Item>
           </Form>
@@ -162,7 +157,7 @@ export default function ComposeNews ({ action, newsInfo }) {
         <div className={current === 1 ? '' : composeNewsStyle['steps-hidden']}>
           <Editor callback={handlerEditorData} completeContent={initCompleteContent} />
         </div>
-        <div className={current === 2 ? '' : composeNewsStyle['steps-hidden']}>3</div>
+        <div className={current === 2 ? '' : composeNewsStyle['steps-hidden']}></div>
       </div>
       <div>
         {
