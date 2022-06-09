@@ -186,7 +186,7 @@ export default function UserList () {
   }
   return (
     <>
-      <Button type="primary" onClick={showModal}>添加用户</Button>
+      <Button loading={false} type="primary" size="middle" onClick={showModal}>添加用户</Button>
       <Table columns={columns} dataSource={userTable} rowKey={(item) => item.id} />
       <Modal
         visible={addVisible}

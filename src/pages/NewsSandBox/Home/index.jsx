@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, Col, Row, List, Avatar, Drawer } from 'antd'
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import ajax from '../../../utils/ajax'
-import { useHistory } from 'react-router-dom'
+import _ from 'lodash'
+import * as echarts from 'echarts'
 import dogsPic from '../../../images/dogs.jpg'
 const { Meta } = Card
 
 export default function Home () {
   const [skimNumber, setSkimNumber] = useState([])
   const [likeNumber, setLikeNumber] = useState([])
+  const [barEcharts, setBarEcharts] = useState(null)
+  const [pieEcharts, setPieEcharts] = useState(null)
+  const [pieEchartsData, setPieEchartsData] = useState([])
   const [visible, setVisible] = useState(false)
+  const barRef = useRef(null)
+  const pieRef = useRef(null)
   // const history = useHistory()
   const { username, region, role: { roleName } } = useSelector(state => state.userRightReducer)
   useEffect(() => {
@@ -25,9 +31,112 @@ export default function Home () {
       setLikeNumber(res.data)
     })
   }, [])
+  useEffect(() => {
+    ajax.get(`/api/news?publishState=2&_expand=category`).then(res => {
+      setTimeout(() => {
+        renderBarEcharts(_.groupBy(res.data, item => item.category.title))
+      }, 2)
+    })
+    return () => {
+      window.onresize = null
+    }
+  }, [])
+  useEffect(() => {
+    ajax.get(`/api/news?publishState=2&author=${username}&_expand=category`).then(res => {
+      let handleData = Object.entries(_.groupBy(res.data, item => item.category.title)).map(item => {
+        return {
+          value: item[1].length,
+          name: item[0]
+        }
+      })
+      setPieEchartsData(handleData)
+    })
+  }, [username])
+  const renderBarEcharts = (handledData) => {
+    let myChart
+    if (!barEcharts) {
+      myChart = echarts.init(barRef.current)
+      setBarEcharts(myChart)
+    } else {
+      myChart = barEcharts
 
+    }
+    const options = {
+      title: {
+        text: '新闻分类图示'
+      },
+      tooltip: {},
+      legend: {
+        data: ['销量']
+      },
+      xAxis: {
+        data: Object.keys(handledData),
+        axisLabel: {
+          rotate: '45'
+        }
+      },
+      yAxis: {
+        minInterval: 1
+      },
+      series: [
+        {
+          name: '销量',
+          type: 'bar',
+          data: Object.values(handledData).map(item => {
+            return item.length
+          })
+        }
+      ]
+    }
+    // barEcharts
+    myChart.setOption(options)
+    window.onresize = () => {
+      myChart.resize()
+    }
+  }
   const changeVisible = () => {
     setVisible(!visible)
+    setTimeout(() => {
+      renderPieEcharts(pieEchartsData)
+    }, 0)
+  }
+  const renderPieEcharts = (handledData) => {
+    let myChart
+    if (!pieEcharts) {
+      myChart = echarts.init(pieRef.current)
+      setPieEcharts(myChart)
+    } else {
+      myChart = pieEcharts
+    }
+    const options = {
+      title: {
+        text: '当前用户新闻分类图示',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: 'Access From',
+          type: 'pie',
+          radius: '50%',
+          data: handledData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    }
+    myChart.setOption(options)
   }
   return (
     <div className="site-card-wrapper">
@@ -57,13 +166,6 @@ export default function Home () {
               dataSource={likeNumber}
               renderItem={(item) => (
                 <List.Item>
-                  {/* <span
-                    style={{ color: '#1890FF', cursor: 'pointer' }}
-                    onClick={() => {
-                      history.push({
-                        pathname: `/news-manage/update/${item.id}`
-                      })
-                    }}>{item.title}</span> */}
                   <a href={`#/news-manage/update/${item.id}`}>{item.title}</a>
                 </List.Item>
               )}
@@ -99,10 +201,9 @@ export default function Home () {
           </Card>
         </Col>
       </Row>
-      <Drawer title="Basic Drawer" placement="right" onClose={changeVisible} visible={visible}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <div style={{ width: '100%', height: '400px', marginTop: '50px' }} ref={barRef}></div>
+      <Drawer title="个人新闻分类" width="500" placement="right" onClose={changeVisible} visible={visible}>
+        <div style={{ width: '100%', height: '600px' }} ref={pieRef}></div>
       </Drawer>
     </div>
   )
