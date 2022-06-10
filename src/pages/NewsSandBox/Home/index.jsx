@@ -23,6 +23,7 @@ export default function Home () {
     // /api/news?publishState=2&_expand=category&_sort=view&_order=desc
     ajax.get(`/api/news?publishState=2&_expand=category&_sort=view&_order=desc&_limit=10`).then(res => {
       setSkimNumber(res.data)
+      console.log(res.data);
     })
   }, [])
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Home () {
     ajax.get(`/api/news?publishState=2&_expand=category`).then(res => {
       setTimeout(() => {
         renderBarEcharts(_.groupBy(res.data, item => item.category.title))
-      }, 2)
+      }, 0)
     })
     return () => {
       window.onresize = null
