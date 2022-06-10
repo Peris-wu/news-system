@@ -3,13 +3,25 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from '../../redux'
 import { getLoading } from '../../actions/loading'
+
+const getBaseUrl = () => {
+  const ENV = process.env.NODE_ENV
+  console.log(ENV)
+  if (ENV === 'development') {
+    return 'http://192.168.99.103:3000'
+  } else if (ENV === 'production') {
+    return 'http://192.168.99.103:4000'
+  }
+}
 const ajax = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: getBaseUrl(),
   timeout: 5000
 })
 ajax.interceptors.request.use(config => {
   NProgress.start()
   store.dispatch(getLoading(true))
+  console.log(config)
+  config.url = config.url.slice(4)
   return config
 })
 ajax.interceptors.response.use(

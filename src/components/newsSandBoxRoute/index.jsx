@@ -75,7 +75,6 @@ export default function NewsSandBoxRoute () {
     <Route path="/publish-manage/unpublished" render={() => lazyLoad('PublicManage/UnPublic')} />
     <Route path="/publish-manage/published" render={() => lazyLoad('PublicManage/Publiced')} />
     <Route path="/publish-manage/sunset" render={() => lazyLoad('PublicManage/Offline')} /> */}
-
         <Redirect path="/" to="/home" exact />
         {routeList.length > 0 ? <Route path="*" render={() => lazyLoad('NotFound')} /> : null}
       </Switch>

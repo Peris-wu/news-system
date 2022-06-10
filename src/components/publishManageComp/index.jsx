@@ -6,7 +6,8 @@ export default function index (props) {
     {
       title: '新闻标题',
       dataIndex: 'title',
-      key: 'title'
+      key: 'title',
+      render: (title, item) => <a href={`#/news-manage/preview/${item.id}`}>{title}</a>
     },
     {
       title: '作者',
