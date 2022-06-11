@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
+import _ from 'lodash'
 export default function EcloseEditor ({ callback, completeContent }) {
   const [editorState, setEditorState] = useState('')
   useEffect(() => {
@@ -29,12 +30,13 @@ export default function EcloseEditor ({ callback, completeContent }) {
   const onEditorStateChange = (editState) => {
     setEditorState(editState)
   }
+  const _onEditorStateChange = _.debounce(onEditorStateChange, 300)
   return (
     <div style={{ border: '1px solid #eee' }}>
       <BraftEditor
         contentStyle={{ width: '100%', height: '200px' }}
         value={editorState}
-        onChange={onEditorStateChange}
+        onChange={_onEditorStateChange}
         onBlur={onEditorBlur}
       />
     </div>

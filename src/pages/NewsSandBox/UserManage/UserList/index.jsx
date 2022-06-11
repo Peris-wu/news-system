@@ -4,6 +4,7 @@ import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-de
 import CollectCreateForm from '../CreateForm'
 import ajax from '../../../../utils/ajax'
 import handlerStorage from '../../../../utils/handlerLocalStorage'
+import _ from 'lodash'
 const { confirm } = Modal
 export default function UserList () {
   const [userTable, setUserTable] = useState([])
@@ -13,7 +14,7 @@ export default function UserList () {
   const [updateVisible, setUpdateVisible] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
   const [currentItem, setCurrentItem] = useState({})
-  const addRef = useRef(null)
+  const addRef = useRef()
   const updateRef = useRef(null)
   const { role: { roleType }, region, username } = handlerStorage.getStorage()
   useEffect(() => {
@@ -139,11 +140,13 @@ export default function UserList () {
         role: roles.filter(item => item.roleType === res.data.roleId)[0]
       }])
       setAddIsVisible(!addVisible)
+
       addRef.current.resetFields()
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
+  const _addUser = _.debounce(addUser, 200)
   const deleUser = (item) => {
     ajax.delete(`/api/users/${item.id}`)
     message.info({
@@ -187,7 +190,14 @@ export default function UserList () {
   return (
     <>
       <Button loading={false} type="primary" size="middle" onClick={showModal}>添加用户</Button>
-      <Table columns={columns} dataSource={userTable} rowKey={(item) => item.id} />
+      <Table
+        columns={columns}
+        dataSource={userTable}
+        rowKey={(item) => item.id}
+        pagination={{
+          pageSize: 5
+        }}
+      />
       <Modal
         visible={addVisible}
         title="添加用户信息"

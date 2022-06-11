@@ -10,7 +10,7 @@ const getBaseUrl = () => {
   if (ENV === 'development') {
     return 'http://192.168.99.103:3000'
   } else if (ENV === 'production') {
-    return 'http://192.168.99.103:4000'
+    return 'http://192.168.99.103:5000'
   }
 }
 const ajax = axios.create({
@@ -20,8 +20,6 @@ const ajax = axios.create({
 ajax.interceptors.request.use(config => {
   NProgress.start()
   store.dispatch(getLoading(true))
-  console.log(config)
-  config.url = config.url.slice(4)
   return config
 })
 ajax.interceptors.response.use(

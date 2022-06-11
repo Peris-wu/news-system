@@ -1,9 +1,9 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 import { Form, Input, Select } from 'antd'
-import handlerStorage from '../../../../utils/handlerLocalStorage'
+import { useSelector } from 'react-redux'
 const { Option } = Select
-function CreateForm ({ regions, roles, isDisable, setIsDisable }, ref) {
-  const { role: { roleType }, region } = handlerStorage.getStorage()
+const CreateForm = ({ regions, roles, isDisable, setIsDisable }, ref) => {
+  const { role: { roleType }, region } = useSelector(state => state.userRightReducer)
   const triggerRequired = (roleId) => {
     if (roleId === 1) {
       setIsDisable(true)
